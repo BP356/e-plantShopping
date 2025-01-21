@@ -40,6 +40,9 @@ body {
 }
 
 /* Product Grid */
+.products {
+    margin-top: 120px;
+}
 .product-grid {
     display:flex;
     flex-direction: column;
@@ -226,6 +229,9 @@ body {
   }
   
   @media (max-width: 768px) {
+    .products {
+        margin-top: 200px;
+    }
     .product-card {
       flex: 1 1 calc(50% - 20px); /* Adjust width for 2 cards per row with 20px gap on small screens */
       max-width: calc(50% - 20px); /* Adjust max-width for 2 cards per row with 20px gap on small screens */

@@ -238,6 +238,12 @@ function ProductList() {
 
     useEffect(() => {
         setTotalQuantity(cart.reduce((total, item) => (total + item.quantity), 0));
+
+        // if cart changed, maybe one plant got removed -> refresh addedToCart
+        // console.log(JSON.stringify(addedToCart));
+        // const newArray = cart.map(item => ({ [item.name]: true }));
+        // console.log(JSON.stringify(newArray));
+        // setAddedToCart({ ...addedToCart, [plant.name]: true });
     }, [cart])
 
     const styleObj = {
@@ -297,11 +303,19 @@ function ProductList() {
     const handleAddToCart = (plant) => {
         dispatch(addItem(plant));
         setAddedToCart({ ...addedToCart, [plant.name]: true });
+
         // setAddedToCart((prevState) => ({
         //     ...prevState,
         //     [plant.name]: true, // Set the product name as key and value as true to indicate it's added to cart
         //   }));
     }
+
+    const deletePlantFromAddedToCart = (name) => {
+        setAddedToCart((prevState) => ({
+            ...prevState,
+            [name]: false, // Set the product name as key and value as true to indicate it's added to cart
+        }));
+    };
 
     return (
         <div>
@@ -319,7 +333,7 @@ function ProductList() {
                 </div>
                 <div style={styleObjUl}>
                     <div> <a href="#" onClick={(e) => handlePlantsClick(e)} style={styleA}>Plants</a></div>
-                {/* </div>
+                    {/* </div>
                 <div style={styleObjUl}> */}
                     <div style={{ position: 'relative', display: 'inline-block' }}>
                         <a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
@@ -341,7 +355,16 @@ function ProductList() {
                                         <img src={plant.image} alt={plant.name} className='product-image' />
                                         <div>{plant.description}</div>
                                         <div className='product-price'>{plant.cost}</div>
-                                        <button className='product-button' onClick={() => handleAddToCart(plant)}>Add to cart</button>
+                                        {addedToCart[plant.name] ? (
+                                            <button
+                                                className="product-button added-to-cart"
+                                                disabled
+                                                onClick={() => handleAddToCart(plant)}>Add to cart</button>
+                                        ) : (
+                                            <button
+                                                className="product-button"
+                                                onClick={() => handleAddToCart(plant)}>Add to cart</button>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -349,7 +372,7 @@ function ProductList() {
                     ))}
                 </div>
             ) : (
-                <CartItem onContinueShopping={handleContinueShopping} />
+                <CartItem onContinueShopping={handleContinueShopping} onDeletePlant={deletePlantFromAddedToCart} />
             )}
         </div>
     );
